@@ -2,19 +2,18 @@
 module containerRegistry './modules/cont.bicep' = {
   name: 'containerRegistryDeployment'
   params: {
-    name: 'myContainerRegistry' // Replace with your registry name
-    location: 'EastUS' // Replace with your desired location
-    acrAdminUserEnabled: true // Enable admin user
+    name: 'DianaContainerRegistry'
+    location: 'EastUS'
+    acrAdminUserEnabled: true
   }
 }
-
 
 // Azure App Service Plan Deployment
 module appServicePlan './modules/app-service.bicep' = {
   name: 'appServicePlanDeployment'
   params: {
-    name: 'myAppServicePlan' // Replace with your App Service Plan name
-    location: 'EastUS' // Replace with your desired location
+    name: 'myAppServicePlan'
+    location: 'EastUS'
     sku: {
       capacity: 1
       family: 'B'
@@ -31,13 +30,16 @@ module appServicePlan './modules/app-service.bicep' = {
 module webApp './modules/web-app.bicep' = {
   name: 'webAppDeployment'
   params: {
-    name: 'myWebApp' // Replace with your Web App name
-    location: 'EastUS' // Replace with your desired location
+    name: 'myWebApp'
+    location: 'EastUS'
     kind: 'app'
-    serverFarmResourceId: appServicePlan.outputs.resourceId // Link to App Service Plan
+    serverFarmResourceId: appServicePlan.outputs.resourceId
+    containerRegistryName: containerRegistry.outputs.loginServer
+    containerRegistryImageName: 'myImage'
+    containerRegistryImageVersion: 'latest'
     siteConfig: {
-      linuxFxVersion: 'DOCKER|${containerRegistry.outputs.loginServer}/myImage:latest' // Replace 'myImage' with your actual image name
-      appCommandLine: '' // Optional
+      linuxFxVersion: 'DOCKER|${containerRegistry.outputs.loginServer}/myImage:latest'
+      appCommandLine: ''
     }
     appSettingsKeyValuePairs: {
       WEBSITES_ENABLE_APP_SERVICE_STORAGE: false
@@ -45,11 +47,5 @@ module webApp './modules/web-app.bicep' = {
       DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.outputs.adminUsername
       DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.outputs.adminPassword
     }
-    containerRegistryName: containerRegistry.outputs.loginServer // Provide the registry name from outputs
-    containerRegistryImageName: 'myImage' // Replace with your image name
-    containerRegistryImageVersion: 'latest' // Replace with your image version
   }
 }
-
-
-
