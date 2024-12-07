@@ -8,6 +8,7 @@ param containerRegistryImageVersion string = 'latest'
 param keyVaultName string
 param webAppName string
 
+// hello
 // var adminUsernameSecretName = 'acrAdminUsername'
 // var adminPasswordSecretName = 'acrAdminPassword'
 param adminUsernameSecretName string 
