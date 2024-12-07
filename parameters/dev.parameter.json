@@ -28,14 +28,6 @@
           "size": "B1",
           "tier": "Basic"
         }
-      },
-      "appSettingsKeyValuePairs": {
-        "value": {
-          "WEBSITES_ENABLE_APP_SERVICE_STORAGE": false,
-          "DOCKER_REGISTRY_SERVER_URL": "https://DianaContainerRegistry.azurecr.io",
-          "DOCKER_REGISTRY_SERVER_USERNAME": "your-username",
-          "DOCKER_REGISTRY_SERVER_PASSWORD": "your-password"
-        }
       }
     }
   }

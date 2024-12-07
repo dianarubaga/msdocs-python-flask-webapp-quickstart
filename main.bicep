@@ -24,8 +24,8 @@ param sku object
 module containerRegistry './modules/cont.bicep' = {
   name: 'containerRegistryDeployment'
   params: {
-    name: containerRegistryName // Reference from parameters
-    location: location // Reference from parameters
+    name: containerRegistryName
+    location: location
     acrAdminUserEnabled: true
   }
 }
@@ -34,9 +34,9 @@ module containerRegistry './modules/cont.bicep' = {
 module appServicePlan './modules/app-service.bicep' = {
   name: 'appServicePlanDeployment'
   params: {
-    name: appServicePlanName // Reference from parameters
-    location: location // Reference from parameters
-    sku: sku // Reference from parameters
+    name: appServicePlanName
+    location: location
+    sku: sku
     kind: 'Linux'
     reserved: true
   }
@@ -46,13 +46,13 @@ module appServicePlan './modules/app-service.bicep' = {
 module webApp './modules/web-app.bicep' = {
   name: 'webAppDeployment'
   params: {
-    name: webAppName // Reference from parameters
-    location: location // Reference from parameters
+    name: webAppName
+    location: location
     kind: 'app'
-    serverFarmResourceId: appServicePlan.outputs.resourceId // Output from App Service Plan module
-    containerRegistryName: containerRegistry.outputs.loginServer // Output from Container Registry module
-    containerRegistryImageName: containerRegistryImageName // Reference from parameters
-    containerRegistryImageVersion: containerRegistryImageVersion // Reference from parameters
+    serverFarmResourceId: appServicePlan.outputs.resourceId
+    containerRegistryName: containerRegistry.outputs.loginServer
+    containerRegistryImageName: containerRegistryImageName
+    containerRegistryImageVersion: containerRegistryImageVersion
     siteConfig: {
       linuxFxVersion: 'DOCKER|${containerRegistry.outputs.loginServer}/${containerRegistryImageName}:${containerRegistryImageVersion}'
       appCommandLine: ''
