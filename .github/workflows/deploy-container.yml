@@ -8,11 +8,11 @@ on:
 
 env:
   RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-B-DEV
-  SUBSCRIPTION_ID_DEV: 0b9cada-61bc-4b5a-bd7a-52c606726b3b
-  REGISTRY_LOGIN_SERVER: dianacont.azurecr.io # Replace with your ACR login server
-  IMAGE_BASE_NAME: dianaimage # Replace with your Docker image name
-  WEBAPP_NAME: dianarubaga # Replace with your Web App name
-  KEY_VAULT_NAME: dianakeyvault # Replace with your Key Vault name
+  SUBSCRIPTION_ID_DEV: e0b9cada-61bc-4b5a-bd7a-52c606726b3b
+  REGISTRY_LOGIN_SERVER: dianacont.azurecr.io 
+  IMAGE_BASE_NAME: dianaimage
+  WEBAPP_NAME: dianawebapp
+  KEYVAULT_NAME: dianakeyvault
 
 jobs:
   build-and-push:
@@ -28,31 +28,24 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Step 3: Retrieve Key Vault Secrets
-      - name: Retrieve Key Vault Secrets
-        id: keyvault-secrets
-        run: |
-          export ADMIN_USERNAME=$(az keyvault secret show --vault-name ${{ env.KEY_VAULT_NAME }} --name adminUsernameSecretName --query value -o tsv)
-          export ADMIN_PASSWORD=$(az keyvault secret show --vault-name ${{ env.KEY_VAULT_NAME }} --name adminPasswordSecretName --query value -o tsv)
-          echo "ADMIN_USERNAME=$ADMIN_USERNAME" >> $GITHUB_ENV
-          echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" >> $GITHUB_ENV
-
-      # Step 4: Login to Azure Container Registry
+      # Step 3: Login to Azure Container Registry using secrets directly from Key Vault
       - name: Login to ACR
         run: |
-          echo "${{ env.ADMIN_PASSWORD }}" | docker login ${{ env.REGISTRY_LOGIN_SERVER }} -u "${{ env.ADMIN_USERNAME }}" --password-stdin
+          docker login ${{ env.REGISTRY_LOGIN_SERVER }} \
+            -u "$(az keyvault secret show --vault-name ${{ env.KEYVAULT_NAME }} --name adminUsernameSecretName --query value -o tsv)" \
+            -p "$(az keyvault secret show --vault-name ${{ env.KEYVAULT_NAME }} --name adminPasswordSecretName --query value -o tsv)"
 
-      # Step 5: Set Image Version
+      # Step 4: Set image version
       - name: Set Image Version
         id: image-version
-        run: echo "version=$(echo ${GITHUB_REF#refs/heads/})-$(date +'%Y.%m.%d.%H.%M')" >> $GITHUB_ENV
+        run: echo "::set-output name=version::$(date +'%Y.%m.%d.%H.%M')"
 
-      # Step 6: Build and Push Docker Image
+      # Step 5: Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
-          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_BASE_NAME }}:${{ env.version }}
-          docker tag ${{ env.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_BASE_NAME }}:${{ env.version }} ${{ env.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_BASE_NAME }}:latest
-          docker push ${{ env.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_BASE_NAME }}:${{ env.version }}
+          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_BASE_NAME }}:${{ steps.image-version.outputs.version }}
+          docker build . -t ${{ env.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_BASE_NAME }}:latest
+          docker push ${{ env.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_BASE_NAME }}:${{ steps.image-version.outputs.version }}
           docker push ${{ env.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_BASE_NAME }}:latest
 
   deploy:
