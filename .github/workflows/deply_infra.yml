@@ -3,9 +3,7 @@ name: Deploy Infrastructure
 on:
   push:
     branches:
-      - main
-      - q2
-  workflow_dispatch:
+      - '*'
 
 jobs:
   deploy:
@@ -23,8 +21,8 @@ jobs:
     - name: Deploy Bicep Template
       run: |
         az deployment group create \
-          --name deployInfrastructure \
+          --name deploymentName \
           --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }} \
           --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} \
-          --template-file ./main.bicep \
-          --parameters @./dev.parameters.json
+          --template-file main.bicep \
+          --parameters @main.parameters.json
