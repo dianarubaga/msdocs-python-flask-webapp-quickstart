@@ -60,8 +60,8 @@ module webApp './modules/web-app.bicep' = {
     appSettingsKeyValuePairs: {
       WEBSITES_ENABLE_APP_SERVICE_STORAGE: false
       DOCKER_REGISTRY_SERVER_URL: containerRegistry.outputs.loginServer
-      DOCKER_REGISTRY_SERVER_USERNAME: containerRegistry.outputs.adminUsername
-      DOCKER_REGISTRY_SERVER_PASSWORD: containerRegistry.outputs.adminPassword
+      DOCKER_REGISTRY_SERVER_USERNAME: 'placeholder-username' // Static username for validation
+      DOCKER_REGISTRY_SERVER_PASSWORD: 'placeholder-password' // Static password for validation
     }
   }
 }

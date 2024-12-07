@@ -5,14 +5,14 @@
       "location": {
         "value": "EastUS"
       },
+      "containerRegistryName": {
+        "value": "DianaContainerRegistry"
+      },
       "appServicePlanName": {
         "value": "myAppServicePlan"
       },
       "webAppName": {
         "value": "myWebApp"
-      },
-      "containerRegistryName": {
-        "value": "DianaContainerRegistry"
       },
       "containerRegistryImageName": {
         "value": "myImage"
