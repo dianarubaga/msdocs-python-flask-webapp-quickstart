@@ -36,7 +36,6 @@ var dockerAppSettings = {
 }
 
 
-
 resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   name: name
   location: location
