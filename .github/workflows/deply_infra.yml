@@ -1,27 +1,29 @@
-name: Deploy Bicep Template
+name: Deploy Infrastructure
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy Bicep Template
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-          template: ./main.bicep
-          parameters: ./dev.parameters.json
-          deploymentMode: Incremental
+    - name: Deploy Bicep Template
+      run: |
+        az deployment group create \
+          --name deployInfrastructure \
+          --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP_NAME }} \
+          --template-file ./main.bicep \
+          --parameters @./dev.parameters.json
