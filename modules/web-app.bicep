@@ -1,5 +1,5 @@
 @description('Required. Name of the site.')
-param name string
+param  name string
 
 @description('Optional. Location for all Resources.')
 param location string = resourceGroup().location

@@ -12,6 +12,8 @@ env:
   REGISTRY_LOGIN_SERVER: dianacont.azurecr.io # Replace with your ACR login server
   IMAGE_BASE_NAME: dianaimage # Replace with your Docker image name
   WEBAPP_NAME: dianarubaga # Replace with your Web App name
+  KEY_VAULT_NAME: dianakeyvault                  # Replace with your Key Vault name
+ 
 
 jobs:
   build-and-push:
@@ -31,9 +33,9 @@ jobs:
       - name: Login to ACR
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ env.REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+            docker login ${{ env.REGISTRY_LOGIN_SERVER }} \
+            -u "$(az keyvault secret show --vault-name ${{ env.KEYVAULT_NAME }} --name adminUsernameSecretName --query value -o tsv)" \
+            -p "$(az keyvault secret show --vault-name ${{ env.KEYVAULT_NAME }} --name adminPasswordSecretName --query value -o tsv)"
 
       # Step 4: Set image version
       - name: Set Image Version
