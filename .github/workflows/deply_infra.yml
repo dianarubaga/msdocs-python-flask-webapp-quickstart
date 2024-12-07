@@ -14,7 +14,7 @@ env:
   USER_ALIAS: dianarubaga
 
 jobs:
-  validate_dev: # Validate the Bicep file
+  build: # Validate the Bicep file
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -36,7 +36,7 @@ jobs:
 
   deploy_dev: # Deploy the infrastructure to DEV
     runs-on: ubuntu-latest
-    needs: validate_dev
+    needs: build
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
