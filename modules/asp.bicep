@@ -13,7 +13,7 @@ param location string = resourceGroup().location
 param kind string = 'App'
 
 @description('Conditional. Defaults to false when creating Windows/app App Service Plan. Required if creating a Linux App Service Plan and must be set to true.')
-param reserved bool = (kind == 'Linux')
+param reserved bool = true
 
 param sku object = {
   capacity: 1
@@ -25,6 +25,7 @@ param sku object = {
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: name
+  kind: kind
   location: location
   sku: sku
   properties: {
