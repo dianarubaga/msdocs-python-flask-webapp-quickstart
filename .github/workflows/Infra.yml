@@ -20,7 +20,7 @@ jobs:
 
       # Validate Bicep file
       - name: Validate Bicep template
-        run: az bicep build --file ./main.bicep --no-warnings # Suppress warnings during validation
+        run: az bicep build --file ./main.bicep
 
   deploy:
     runs-on: ubuntu-latest
