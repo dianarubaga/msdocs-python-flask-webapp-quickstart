@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - '**' # Fix wildcard to match all branches
+      - '**' # Match all branches
 
 env:
   RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-B-DEV
@@ -27,7 +27,6 @@ jobs:
     needs: build
     environment:
       name: 'Development'
-
     steps:
       # Checkout repository
       - name: Checkout repository
@@ -47,5 +46,3 @@ jobs:
           resourceGroupName: ${{ env.RESOURCE_GROUP_DEV }}
           template: ./main.bicep
           parameters: ./parameters/dev.bicepparam
-          deploymentName: deploy-dev-${{ github.run_id }}
-          enable-detailed-trace: true # Enable detailed logs for debugging
