@@ -30,6 +30,7 @@ output adminUsername string = acr.listCredentials().username
 output adminPassword string = acr.listCredentials().passwords[0].value
 
 
+#disable-next-line outputs-should-not-contain-secrets
 @description('The resource ID of the Azure Container Registry.')
 output resourceId string = acr.id
 output url string = acr.properties.loginServer
