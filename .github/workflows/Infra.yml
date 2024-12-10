@@ -1,0 +1,38 @@
+name: deploy-dev
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - '*'
+env:
+    RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-B-DEV
+    SUBSCRIPTION_ID_DEV: e0b9cada-61bc-4b5a-bd7a-52c606726b3b
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Login to Azure
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Validate the Bicep template
+      - name: Validate Bicep template
+        run: az bicep build --file ./main.bicep
+
+      # Deploy the Bicep template
+      - name: Deploy to Azure
+        uses: azure/arm-deploy@v2
+        with:
+          subscriptionId: ${{ env.SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ env.RESOURCE_GROUP }}
+          template: ./main.bicep
+          parameters: ./parameters/dev.bicepparam
+          deploymentName: ${{ env.DEPLOYMENT_NAME }}
