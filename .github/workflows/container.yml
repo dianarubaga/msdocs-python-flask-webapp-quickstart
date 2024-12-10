@@ -9,7 +9,7 @@ on:
 env:
   RESOURCE_GROUP_DEV: BCSAI2024-DEVOPS-STUDENTS-B-DEV
   SUBSCRIPTION_ID_DEV: 0b9cada-61bc-4b5a-bd7a-52c606726b3b
-  REGISTRY_LOGIN_SERVER: dianacont.azurecr.io # Replace with your ACR login server
+  REGISTRY_LOGIN_SERVER: dianacr.azurecr.io # Replace with your ACR login server
   IMAGE_BASE_NAME: dianaimage # Replace with your Docker image name
   WEBAPP_NAME: dianarubaga # Replace with your Web App name
 
