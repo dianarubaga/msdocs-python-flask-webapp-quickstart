@@ -34,7 +34,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
     reserved: reserved
   }
 }
-
+// idk
 @description('The resource ID of the App Service Plan.')
 output resourceId string = appServicePlan.id
 
