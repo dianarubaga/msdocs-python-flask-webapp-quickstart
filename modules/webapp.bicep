@@ -10,6 +10,7 @@ param containerRegistryImageName string
 param containerRegistryImageVersion string = 'latest'
 param additionalAppSettings array = []
 
+// docker app settings
 var dockerAppSettings = [
   { name: 'DOCKER_REGISTRY_SERVER_URL', value: 'https://${containerRegistryName}.azurecr.io' }
   { name: 'DOCKER_REGISTRY_SERVER_USERNAME', value: containerRegistryUsername }
